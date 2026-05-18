@@ -64,10 +64,11 @@ def load_promotions() -> list[dict]:
 
 async def fetch_photo(url: str) -> BufferedInputFile | None:
     """Скачивает фото с сервера и возвращает как файл для Telegram."""
-      try:
+    try:
         headers = {"User-Agent": "Mozilla/5.0 (compatible; TelegramBot/1.0)"}
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                if resp.status == 200:
                     data = await resp.read()
                     ext = "jpg" if url.lower().endswith(".jpg") else "png"
                     return BufferedInputFile(data, filename=f"photo.{ext}")
