@@ -16,7 +16,7 @@ def main_menu() -> InlineKeyboardMarkup:
     """Главное меню — уровень 1."""
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🌟 Хиты продаж",           callback_data="cat:hits:0")],
-        [InlineKeyboardButton(text="🫚 Масла",               callback_data="menu:oils")],
+        [InlineKeyboardButton(text="🥜 Масла",               callback_data="menu:oils")],
         [InlineKeyboardButton(text="🥗 Деликатесы и суперфуды", callback_data="menu:food")],
         [InlineKeyboardButton(text="🌿 Пищеварение",          callback_data="cat:digestion:0")],
         [InlineKeyboardButton(text="🧁 Для выпечки",          callback_data="cat:baking:0")],
@@ -55,7 +55,6 @@ def card_keyboard(category: str, next_index: int, url: str, total: int) -> Inlin
     rows = [
         [InlineKeyboardButton(text="🛒 Купить на сайте →", url=url)],
     ]
-    # Показываем «другой вариант» только если продуктов больше одного
     if total > 1:
         rows.append([
             InlineKeyboardButton(
