@@ -25,6 +25,7 @@ IMG_GLOW            = "https://files.catbox.moe/hjwwmj.png"
 IMG_SESAME          = "https://files.catbox.moe/1wohej.png"
 IMG_PEANUT          = "https://files.catbox.moe/7oqp61.png"
 IMG_SUNFLOWER       = "https://files.catbox.moe/puq4lh.png"
+IMG_SUNFLOWER_AROMA = "https://imgproxy.trawaoil.ru/CG8z1uGpR5cTDjyjEqs6knHKpaoVrLneXktAj3_1OoU/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvYmV0d2Vlbi9tdXNpY2lhbi9hbHRob3VnaC8wYjI1MjJlMC0yMmFjLTQwY2EtODNjOS04M2FlYmM2NGYxMGYucG5n"
 IMG_FIBER_MIX       = "https://files.catbox.moe/0l1oxx.jpg"
 IMG_FIBER_HEDGEHOG  = "https://files.catbox.moe/4nx47d.png"
 IMG_CEDAR_FLOUR     = "https://files.catbox.moe/2h7ghd.png"
@@ -750,6 +751,16 @@ PRODUCTS: dict[str, list[dict]] = {
                 "Содержит витамин Е и лецитин — сыродавленное, без нагрева",
             ],
             "url": f"https://trawaoil.ru/p/maslo-podsolnechnoe-syrodavlennoe-61fbbd89794ca42960920f65{UTM}",
+        },
+        {
+            "name": "Ароматное подсолнечное масло из обжаренных семян",
+            "photo_url": IMG_SUNFLOWER_AROMA,
+            "benefits": [
+                "Из обжаренных семян — насыщенный аромат и глубокий вкус",
+                "Сыродавление в дубовых бочках: польза сырых семян + богатство жареных",
+                "Одно из самых любимых масел TRAWA — для салатов и заправок",
+            ],
+            "url": f"https://trawaoil.ru/p/maslo-aromatnoe-podsolnechnoe-iz-obzharennyh-semyan-61fbbd88794ca42960920e3d{UTM}",
         },
     ],
 }
