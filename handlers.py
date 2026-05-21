@@ -65,9 +65,8 @@ def load_promotions() -> list[dict]:
 async def fetch_photo(url: str) -> BufferedInputFile | None:
     """Скачивает фото с сервера и возвращает как файл для Telegram."""
     try:
-        headers = {"User-Agent": "Mozilla/5.0 (compatible; TelegramBot/1.0)"}
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
                 if resp.status == 200:
                     data = await resp.read()
                     ext = "jpg" if url.lower().endswith(".jpg") else "png"
@@ -88,6 +87,7 @@ async def show_text_screen(callback: CallbackQuery, text: str, keyboard) -> None
         try:
             await callback.message.edit_text(text, reply_markup=keyboard, parse_mode="HTML")
         except Exception:
+            # На случай если текст не изменился
             await callback.message.answer(text, reply_markup=keyboard, parse_mode="HTML")
 
 
@@ -116,7 +116,7 @@ async def show_card(callback: CallbackQuery, product: dict, keyboard) -> None:
                         reply_markup=keyboard,
                         parse_mode="HTML",
                     )
-                return
+                return  # фото отправлено — выходим
             except Exception as e:
                 logger.warning(f"Ошибка при отправке фото ({photo_url[:60]}…): {e}. Показываю текст.")
 
@@ -137,7 +137,7 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
     """Приветствие и главное меню."""
     await state.set_state(UserState.browsing)
     await state.update_data(theme="", category="", product="")
-    save_contact(message.from_user)
+    save_contact(message.from_user)          # сохраняем контакт
     log_event(message.from_user.id, "start")
     await message.answer(WELCOME_TEXT, reply_markup=main_menu(), parse_mode="HTML")
 
@@ -149,7 +149,7 @@ async def cmd_contacts(message: Message) -> None:
     """Отправляет администратору файл contacts.csv со всеми контактами."""
     admin_id = int(os.getenv("ADMIN_ID", "0"))
     if message.from_user.id != admin_id:
-        return
+        return  # молча игнорируем запрос от не-администратора
 
     if not os.path.isfile("contacts.csv"):
         await message.answer("Контактов пока нет — никто не запускал бота.")
@@ -179,15 +179,15 @@ async def cb_oils_menu(callback: CallbackQuery, state: FSMContext) -> None:
     """Показывает подменю масел."""
     await state.update_data(theme="Масла")
     log_event(callback.from_user.id, "theme_select", theme="Масла")
-    await show_text_screen(callback, "🫚 <b>Масла</b>\n\nВыберите категорию:", oils_menu())
+    await show_text_screen(callback, "🥜 <b>Масла</b>\n\nВыберите категорию:", oils_menu())
     await callback.answer()
 
 
-# ─── Подменю «Деликатесы и суперфуды» ────────────────────────────────────────
+# ─── Подменю «Еда и суперфуды» ───────────────────────────────────────────────
 
 @router.callback_query(F.data == "menu:food")
 async def cb_food_menu(callback: CallbackQuery, state: FSMContext) -> None:
-    """Показывает подменю деликатесов и суперфудов."""
+    """Показывает подменю еды и суперфудов."""
     await state.update_data(theme="Деликатесы и суперфуды")
     log_event(callback.from_user.id, "theme_select", theme="Деликатесы и суперфуды")
     await show_text_screen(callback, "🥗 <b>Деликатесы и суперфуды</b>\n\nВыберите категорию:", food_menu())
@@ -229,6 +229,7 @@ async def cb_category(callback: CallbackQuery, state: FSMContext) -> None:
         promo_url = promo.get("url", "https://trawaoil.ru")
         keyboard = card_keyboard("promotions", index + 1, promo_url, len(promotions))
 
+        # Формат карточки акции (нет benefits — только name + description)
         text = (
             f"🌿 <b>{promo['name']}</b>\n\n"
             f"💬 <i>{promo.get('description', '')}</i>"
@@ -238,6 +239,7 @@ async def cb_category(callback: CallbackQuery, state: FSMContext) -> None:
         log_event(callback.from_user.id, "card_view",
                   theme="Акции", category="promotions", product=promo["name"])
 
+        # Показываем карточку акции
         if photo_url:
             photo_file = await fetch_photo(photo_url)
             if photo_file:
@@ -280,14 +282,17 @@ async def cb_category(callback: CallbackQuery, state: FSMContext) -> None:
     next_idx = (index + 1) % len(products)
     keyboard = card_keyboard(category, next_idx, product["url"], len(products))
 
+    # Аналитика
     await state.update_data(theme=theme, category=category, product=product["name"])
     log_event(
         callback.from_user.id, "card_view",
         theme=theme, category=category, product=product["name"],
     )
 
+    # ── Специальное предупреждение для «Масел для жарки» (только первая карточка)
     if category == "frying" and index == 0:
         await callback.message.answer(FRYING_WARNING, parse_mode="HTML")
 
+    # Показываем карточку
     await show_card(callback, product, keyboard)
     await callback.answer()
