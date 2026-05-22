@@ -26,6 +26,8 @@ IMG_SESAME          = "https://imgproxy.trawaoil.ru/r8NVdrR4jMu_nJH5wQTm36Trwr4P
 IMG_PEANUT          = "https://imgproxy.trawaoil.ru/jxSnPXdCzgKrAbUncQZo6OgXucwiqqA2zSK366GHA6g/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvYnJvdGhlcmRvd24vY29waWVzL2NvbG91ci9kYWY3NmZjYS1kMzY0LTRkNTUtOWQ5ZS0wYzU4ODhkY2QyODMucG5n"
 IMG_SUNFLOWER       = "https://imgproxy.trawaoil.ru/xWiF3YttQ6I6px5BgVOffv3-bHGxPcbcj0uzKcEdSfg/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvYWxvbmUvY29udGludWVkL2Vsc2Vmb3IvZTNlMzMwZjUtZTlhMC00NDc4LWE3ZmQtZWIwZTQwODBiMTcwLnBuZw"
 IMG_SUNFLOWER_AROMA = "https://imgproxy.trawaoil.ru/CG8z1uGpR5cTDjyjEqs6knHKpaoVrLneXktAj3_1OoU/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvYmV0d2Vlbi9tdXNpY2lhbi9hbHRob3VnaC8wYjI1MjJlMC0yMmFjLTQwY2EtODNjOS04M2FlYmM2NGYxMGYucG5n"
+IMG_SIYANIE         = "https://imgproxy.trawaoil.ru/MjgGco79_oljSl4SpGiOfKPTA7xNKUzFgdPq59ggs2w/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvc3RvcHBlZC9vdGhlci90aGF0cy9lZWI3M2VlNi1lY2M0LTRhMjYtOTMyNy04ZDZhYWU5OGQ4NjcucG5n"
+IMG_ENERGIYA        = "https://imgproxy.trawaoil.ru/KDWM2R43ICCGW6OcqsK50C78ChP_JSYO4sZULgLhCTw/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvd2luc3Rvbi92b2ljZS9uZWNlc3NhcnkvMjViYWM1MGMtYWU3YS00NTkwLTkyODUtOGFlMThhODNkYzc3LnBuZw"
 IMG_FIBER_MIX       = "https://imgproxy.trawaoil.ru/nYxE5Ova6YOo4zVmr-nS-j9MyOwxVILLknzm7r-Q9VM/rs:fit:1920:1080:0/w:256/h:256/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvaW5jcmVhc2VkL29mZmljZXMvc21hbGxlci81MDEwOTI4NS05ZmM4LTQ2YjQtOWM2Zi02ZjJlYmUxZGI0NmEucG5n"
 IMG_FIBER_HEDGEHOG  = "https://imgproxy.trawaoil.ru/Rka5AKyWplgHkPZ0ovu1QBT9c_LucCgLlaabXcha7Uw/rs:fit:1920:1080:0/w:256/h:256/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvZW5vdWdoL2FueXRoaW5nL3dhdGNoZWQvZjhkYTk2OWUtN2NjZS00OTM0LWIyOTgtN2I5ZGU4YWUwZTg2LnBuZw"
 IMG_CEDAR_FLOUR     = "https://imgproxy.trawaoil.ru/PCQiCudThUHBpXA_yWcJLfY3xyrR-66ZgQAU9NF3iLo/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvd291bGQvc3VycHJpc2VwYXJzb25zL29sZGZhc2hpb25lZC9mMTA3ZDI4NS1hNzY3LTQzODEtOWU4Ni05NDdlZjNiODJlOTYucG5n"
@@ -155,6 +157,17 @@ PRODUCTS: dict[str, list[dict]] = {
             "emotion": "Четыре цели — четыре микса — одна упаковка",
             "url": f"https://trawaoil.ru/p/mini-set-funkcionalnyh-masel-TRAWA--Vegetarian-660d328824dd6523315ca1b1{UTM}",
         },
+        {
+            "name": "«Сияние» — женский микс масел TRAWA & Vegetarian",
+            "photo_url": IMG_SIYANIE,
+            "benefits": [
+                "Кунжутное 55% + миндальное 35% + кедровое 10% — молочно-ореховый вкус",
+                "Антиоксидантная защита и увлажнение — изнутри",
+                "250 мл — разработан совместно с VEGETARIAN.RU",
+            ],
+            "emotion": "Женская сила — в каждой капле",
+            "url": f"https://trawaoil.ru/p/siyanie-zhenskiy-miks-syrodavlennyh-masel-TRAWA--Vegetarian-623d02ca25adee0d7df93fcb{UTM}",
+        },
     ],
 
     # ── 👨 Масла для мужчин ────────────────────────────────────────────────────
@@ -202,6 +215,17 @@ PRODUCTS: dict[str, list[dict]] = {
             ],
             "emotion": "Насыщенный вкус тыквы — в каждой капле",
             "url": f"https://trawaoil.ru/p/maslo-tykvennoe-syrodavlennoe-61fbbd8b794ca429609210a7{UTM}",
+        },
+        {
+            "name": "«Энергия» — мужской микс масел TRAWA & Vegetarian",
+            "photo_url": IMG_ENERGIYA,
+            "benefits": [
+                "Грецкий орех 60% + конопля 20% + тыква 20% — свежий вкус с хлорофилльными нотами",
+                "Омега-3, цинк, растительные стеролы — природная поддержка мужского здоровья",
+                "250 мл — разработан совместно с VEGETARIAN.RU",
+            ],
+            "emotion": "Мужской баланс — в каждой ложке",
+            "url": f"https://trawaoil.ru/p/energiya-muzhskoy-miks-syrodavlennyh-masel-TRAWA--Vegetarian-623d02c825adee0d7df93fc4{UTM}",
         },
     ],
 
