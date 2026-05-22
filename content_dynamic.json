@@ -6,5 +6,21 @@
       "url": "https://trawaoil.ru/c/sety-produktov-po-specialnoy-cene?utm_source=telegram&utm_medium=bot&utm_campaign=trawa_bot",
       "photo_url": ""
     }
+  ],
+  "мероприятия": [
+    {
+      "name": "Veter Spring Fest",
+      "date": "23–24 мая · Парк Горького",
+      "description": "Масштабный праздник локальных брендов, вкусной еды и живого общения. Йога, лекции, мастерские, детские активности — и мы там!",
+      "url": "https://veterfest.ru/",
+      "photo_url": "https://imgproxy.trawaoil.ru/LJdRIcIdHlenpQDr0oA5WPeiKq-aFxhAYQuWQFSTv6I/rs:fit:1920:1080:0/aHR0cHM6Ly9zMy50cmF3YW9pbC5ydS9wdWIvZ3Vlc3MvdGhlcmUvYmVjYXVzZS80NDBhNTUxZS0zMzhmLTRjNWQtYjYyYy0xZDRjYWU2M2U2NzMuanBn"
+    },
+    {
+      "name": "Международный день медитации",
+      "date": "24 мая · Царицыно",
+      "description": "Фестиваль практик, лекций и живой музыки. 40+ площадок осознанности, органический маркет, вегетарианский фуд-корт — и продукты TRAWA.",
+      "url": "https://organic-people.com/events/meditationdayrussia/about/",
+      "photo_url": ""
+    }
   ]
 }

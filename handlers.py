@@ -21,6 +21,7 @@ from content import (
     DACHA_TEXT,
     DACHA_URL,
     FRYING_WARNING,
+    NO_EVENTS_TEXT,
     NO_PROMOTIONS_TEXT,
     PRODUCTS,
     WELCOME_TEXT,
@@ -47,20 +48,27 @@ def format_card_text(product: dict) -> str:
     return f"{name}\n\n{benefits}"
 
 
-def load_promotions() -> list[dict]:
-    """
-    Загружает акции из content_dynamic.json при каждом обращении —
-    без перезапуска бота. Возвращает пустой список при ошибке.
-    """
+def _load_dynamic(key: str) -> list[dict]:
+    """Универсальная загрузка списка из content_dynamic.json по ключу."""
     try:
         with open("content_dynamic.json", "r", encoding="utf-8") as f:
             data = json.load(f)
-        return data.get("акции", [])
+        return data.get(key, [])
     except FileNotFoundError:
         logger.warning("content_dynamic.json не найден")
     except json.JSONDecodeError as exc:
         logger.error(f"Ошибка парсинга content_dynamic.json: {exc}")
     return []
+
+
+def load_promotions() -> list[dict]:
+    """Загружает акции из content_dynamic.json без перезапуска бота."""
+    return _load_dynamic("акции")
+
+
+def load_events() -> list[dict]:
+    """Загружает мероприятия из content_dynamic.json без перезапуска бота."""
+    return _load_dynamic("мероприятия")
 
 
 async def fetch_photo(url: str) -> BufferedInputFile | None:
@@ -295,6 +303,58 @@ async def cb_category(callback: CallbackQuery, state: FSMContext) -> None:
                     return
                 except Exception as e:
                     logger.warning(f"Ошибка при отправке фото акции: {e}. Показываю текст.")
+
+        if callback.message.photo:
+            await callback.message.answer(text, reply_markup=keyboard, parse_mode="HTML")
+        else:
+            try:
+                await callback.message.edit_text(text, reply_markup=keyboard, parse_mode="HTML")
+            except Exception:
+                await callback.message.answer(text, reply_markup=keyboard, parse_mode="HTML")
+
+        await callback.answer()
+        return
+
+    # ── Раздел «Маркеты и фестивали» ─────────────────────────────────────────
+    if category == "events":
+        events = load_events()
+        if not events:
+            await show_text_screen(callback, NO_EVENTS_TEXT, main_menu())
+            await callback.answer()
+            return
+
+        index    = raw_index % len(events)
+        event    = events[index]
+        keyboard = card_keyboard("events", index + 1, event.get("url", "https://trawaoil.ru"), len(events))
+
+        text = (
+            f"📅 <b>{event['name']}</b>\n\n"
+            f"🗓 <i>{event.get('date', '')}</i>\n\n"
+            f"{event.get('description', '')}"
+        )
+        photo_url = event.get("photo_url", "")
+
+        log_event(callback.from_user.id, "card_view",
+                  theme="Мероприятия", category="events", product=event["name"])
+
+        if photo_url:
+            photo_file = await fetch_photo(photo_url)
+            if photo_file:
+                try:
+                    if callback.message.photo:
+                        await callback.message.edit_media(
+                            media=InputMediaPhoto(media=photo_file, caption=text, parse_mode="HTML"),
+                            reply_markup=keyboard,
+                        )
+                    else:
+                        await callback.message.answer_photo(
+                            photo=photo_file, caption=text,
+                            reply_markup=keyboard, parse_mode="HTML",
+                        )
+                    await callback.answer()
+                    return
+                except Exception as e:
+                    logger.warning(f"Ошибка при отправке фото мероприятия: {e}. Показываю текст.")
 
         if callback.message.photo:
             await callback.message.answer(text, reply_markup=keyboard, parse_mode="HTML")

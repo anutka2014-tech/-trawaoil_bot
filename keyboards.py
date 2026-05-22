@@ -23,6 +23,7 @@ def main_menu() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="🍫 Десерты без сахара",   callback_data="cat:desserts:0")],
         [InlineKeyboardButton(text="🌸 Косметика",            callback_data="cat:cosmetics:0")],
         [InlineKeyboardButton(text="🔥 Акции",                callback_data="cat:promotions:0")],
+        [InlineKeyboardButton(text="📅 Маркеты и фестивали", callback_data="cat:events:0")],
         [InlineKeyboardButton(text="🌻 Дачный сезон",         callback_data="special:dacha")],
     ])
 
