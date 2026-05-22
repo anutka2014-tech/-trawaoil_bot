@@ -43,7 +43,6 @@ def food_menu() -> InlineKeyboardMarkup:
     """Подменю «Деликатесы и суперфуды» — уровень 2."""
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🧄 Деликатесы и соусы", callback_data="cat:delicacies:0")],
-        [InlineKeyboardButton(text="🌾 Клетчатка и мука",   callback_data="cat:fiber:0")],
         [BACK_BTN],
     ])
 
