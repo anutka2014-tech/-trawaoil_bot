@@ -26,7 +26,7 @@ from content import (
     PRODUCTS,
     WELCOME_TEXT,
 )
-from keyboards import card_keyboard, consent_keyboard, dacha_keyboard, food_menu, main_menu, oils_menu
+from keyboards import card_keyboard, consent_keyboard, dacha_keyboard, event_keyboard, food_menu, main_menu, oils_menu
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -325,7 +325,7 @@ async def cb_category(callback: CallbackQuery, state: FSMContext) -> None:
 
         index    = raw_index % len(events)
         event    = events[index]
-        keyboard = card_keyboard("events", index + 1, event.get("url", "https://trawaoil.ru"), len(events))
+        keyboard = event_keyboard(index + 1, event.get("url", "https://trawaoil.ru"), len(events))
 
         text = (
             f"📅 <b>{event['name']}</b>\n\n"

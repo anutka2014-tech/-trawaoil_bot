@@ -67,6 +67,22 @@ def card_keyboard(category: str, next_index: int, url: str, total: int) -> Inlin
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
+def event_keyboard(next_index: int, url: str, total: int) -> InlineKeyboardMarkup:
+    """Кнопки под карточкой мероприятия — без кнопки «Купить»."""
+    rows = [
+        [InlineKeyboardButton(text="🌐 Узнать подробнее →", url=url)],
+    ]
+    if total > 1:
+        rows.append([
+            InlineKeyboardButton(
+                text="🔄 Следующее мероприятие",
+                callback_data=f"cat:events:{next_index}",
+            )
+        ])
+    rows.append([BACK_BTN])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
 def consent_keyboard() -> InlineKeyboardMarkup:
     """Кнопки для экрана согласия на обработку персональных данных."""
     return InlineKeyboardMarkup(inline_keyboard=[
