@@ -14,9 +14,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import BufferedInputFile, CallbackQuery, FSInputFile, InputMediaPhoto, Message
 
-from analytics import log_event, save_contact
+from analytics import has_seen_consent, log_event, save_consent, save_contact
 from content import (
     CATEGORY_THEME,
+    CONSENT_TEXT,
     DACHA_TEXT,
     DACHA_URL,
     FRYING_WARNING,
@@ -24,7 +25,7 @@ from content import (
     PRODUCTS,
     WELCOME_TEXT,
 )
-from keyboards import card_keyboard, dacha_keyboard, food_menu, main_menu, oils_menu
+from keyboards import card_keyboard, consent_keyboard, dacha_keyboard, food_menu, main_menu, oils_menu
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -134,12 +135,48 @@ async def show_card(callback: CallbackQuery, product: dict, keyboard) -> None:
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext) -> None:
-    """Приветствие и главное меню."""
+    """Приветствие: новым пользователям — экран согласия, вернувшимся — сразу меню."""
     await state.set_state(UserState.browsing)
     await state.update_data(theme="", category="", product="")
-    save_contact(message.from_user)          # сохраняем контакт
+    save_contact(message.from_user)
     log_event(message.from_user.id, "start")
-    await message.answer(WELCOME_TEXT, reply_markup=main_menu(), parse_mode="HTML")
+
+    if has_seen_consent(message.from_user.id):
+        # Пользователь уже отвечал на вопрос о согласии — показываем меню
+        await message.answer(WELCOME_TEXT, reply_markup=main_menu(), parse_mode="HTML")
+    else:
+        # Первый запуск — показываем экран согласия
+        await message.answer(CONSENT_TEXT, reply_markup=consent_keyboard(), parse_mode="HTML")
+
+
+# ─── Согласие на обработку персональных данных ────────────────────────────────
+
+@router.callback_query(F.data == "consent:yes")
+async def cb_consent_yes(callback: CallbackQuery, state: FSMContext) -> None:
+    """Пользователь дал согласие на обработку данных."""
+    save_consent(callback.from_user.id, given=True)
+    log_event(callback.from_user.id, "consent_yes")
+    await callback.message.edit_text(
+        "✅ Спасибо! Теперь вы будете первыми узнавать об акциях и новинках TRAWA.\n\n"
+        "Можно отозвать согласие в любой момент — напишите нам @trawa_support.",
+        parse_mode="HTML",
+    )
+    await callback.message.answer(WELCOME_TEXT, reply_markup=main_menu(), parse_mode="HTML")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "consent:no")
+async def cb_consent_no(callback: CallbackQuery, state: FSMContext) -> None:
+    """Пользователь отказался от обработки данных для рассылок."""
+    save_consent(callback.from_user.id, given=False)
+    log_event(callback.from_user.id, "consent_no")
+    await callback.message.edit_text(
+        "Хорошо, понимаем 🙂 Уведомлять не будем.\n\n"
+        "Бот всё равно работает в полном объёме — смотрите каталог и находите нужные продукты.",
+        parse_mode="HTML",
+    )
+    await callback.message.answer(WELCOME_TEXT, reply_markup=main_menu(), parse_mode="HTML")
+    await callback.answer()
 
 
 # ─── Команда /contacts (только для администратора) ────────────────────────────

@@ -105,6 +105,41 @@ def log_event(
 CONTACTS_FILE = "contacts.csv"
 CONTACTS_FIELDS = ["date", "user_id", "username", "first_name", "last_name"]
 
+CONSENT_FILE   = "consent.csv"
+CONSENT_FIELDS = ["date", "user_id", "consent_given"]
+
+
+def has_seen_consent(user_id: int) -> bool:
+    """Возвращает True, если пользователь уже видел экран согласия (любой ответ)."""
+    if not os.path.isfile(CONSENT_FILE):
+        return False
+    try:
+        with open(CONSENT_FILE, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get("user_id") == str(user_id):
+                    return True
+    except Exception as exc:
+        logger.warning(f"Согласие: ошибка чтения — {exc}")
+    return False
+
+
+def save_consent(user_id: int, given: bool) -> None:
+    """Сохраняет решение пользователя о согласии на обработку персональных данных."""
+    try:
+        file_exists = os.path.isfile(CONSENT_FILE)
+        with open(CONSENT_FILE, "a", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=CONSENT_FIELDS)
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow({
+                "date":          datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "user_id":       str(user_id),
+                "consent_given": "yes" if given else "no",
+            })
+    except Exception as exc:
+        logger.error(f"Согласие: не удалось сохранить — {exc}")
+
 
 def save_contact(user) -> None:
     """

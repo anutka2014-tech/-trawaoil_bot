@@ -55,6 +55,7 @@ def card_keyboard(category: str, next_index: int, url: str, total: int) -> Inlin
     rows = [
         [InlineKeyboardButton(text="🛒 Купить на сайте →", url=url)],
     ]
+    # Показываем «другой вариант» только если продуктов больше одного
     if total > 1:
         rows.append([
             InlineKeyboardButton(
@@ -64,6 +65,14 @@ def card_keyboard(category: str, next_index: int, url: str, total: int) -> Inlin
         ])
     rows.append([BACK_BTN])
     return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def consent_keyboard() -> InlineKeyboardMarkup:
+    """Кнопки для экрана согласия на обработку персональных данных."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ Да, согласен(а)", callback_data="consent:yes")],
+        [InlineKeyboardButton(text="❌ Нет, спасибо",   callback_data="consent:no")],
+    ])
 
 
 def dacha_keyboard(url: str) -> InlineKeyboardMarkup:
